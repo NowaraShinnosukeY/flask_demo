@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emplist</title>
+    <style>
+        td{
+            width:150px;
+        }
+        tr{
+            height:100px;
+        }
+
+    </style>
+    <script>
+        function dele(t){
+            var id = t.parentElement.parentElement.firstElementChild.innerHTML
+            console.log(id)
+            location.href = "{{ url_for('emp.delEmp') }}?id="+id
+        }
+        function update(t){
+            var id = t.parentElement.parentElement.firstElementChild.innerHTML
+            var name = t.parentElement.parentElement.firstElementChild.nextElementSibling.innerHTML
+            var age = t.parentElement.parentElement.firstElementChild.nextElementSibling.nextElementSibling.innerHTML
+            var salary = t.parentElement.parentElement.firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML
+            console.log(id,name,age,salary)
+            location.href = "{{ url_for('emp.updateEmp') }}?id="+id+"&name="+name+"&age="+age+"&salary="+salary
+        }
+    </script>
+</head>
+<body>
+    <div style="width:800px;margin:100px auto;text-align:center;">
+        <table border="1" cellspacing="0" >
+            <tr >
+                <td>编号</td>
+                <td>姓名</td>
+                <td>年龄</td>
+                <td>薪水</td>
+                <td colspan="2">操作</td>
+            </tr>
+            {% for emp in emps %}
+                <tr>
+                    <td>{{ emp.id }}</td>
+                    <td>{{ emp.name }}</td>
+                    <td>{{ emp.age }}</td>
+                    <td>{{ emp.salary }}</td>
+                    <td><a href="javascript:void(0)" onclick="dele(this)">Delete</a></td>
+                    <td><a href="javascript:void(0)" onclick="update(this)">Update</a></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="6"><a href="{{ url_for('emp.add') }}">Add Emp</a></td>
+            </tr>
+        </table>
+            {% if empspage.has_prev %}
+                <a href="{{ url_for('emp.emplist') }}?number={{ empspage.page - 1 }}">上一页</a>
+            {% endif %}
+            {% for i in empspage.iter_pages() %}
+                {% if i == empspage.page %}
+                    {{ i }}
+                {% else %}
+                    <a href="{{ url_for('emp.emplist') }}?number={{ i }}" >{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if empspage.has_next %}
+                <a href="{{ url_for('emp.emplist') }}?number={{ empspage.page + 1 }}">下一页</a>
+            {% endif %}
+    </div>
+</body>
+</html>
